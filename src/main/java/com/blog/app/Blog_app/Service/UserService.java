@@ -4,44 +4,49 @@ import com.blog.app.Blog_app.Entity.User;
 import com.blog.app.Blog_app.Exceptions.ResourceNotFoundException;
 import com.blog.app.Blog_app.Repository.UserRepo;
 import com.blog.app.Blog_app.payloads.UserDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
 
     public UserDTO createUser(UserDTO userDTO) {
-        User user = this.dtoToUser(userDTO);
-        User savedUser = this.userRepo.save(user);
-        this.userToDto(savedUser);
+        User user = dtoToUser(userDTO); //converting UserDTO to User
+        User savedUser = userRepo.save(user);
+        userToDto(savedUser); //converting user back to UserDTO
         return userDTO;
-
-
     }
 
-    UserDTO updateUser(UserDTO userDTO,int userId){
-        User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+    public UserDTO updateUser(UserDTO userDTO,int userId){
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
-        User updatedUser = this.userRepo.save(user);
-        this.userToDto(updatedUser);
-
+        user.setAbout(userDTO.getAbout());
+        User updatedUser = userRepo.save(user);
+        userToDto(updatedUser);
         return userDTO;
     }
 
-    UserDTO getUserById(int userId){
-        return null;
+    public UserDTO getUser(int userId){
+        User getUser = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+        return userToDto(getUser);
     }
 
-    List<UserDTO> getAllUsers(){
-        return null;
+    public List<UserDTO> getAllUsers() {
+        List<User> getUsers = userRepo.findAll();
+        return getUsers.stream().map(this::userToDto).collect(Collectors.toList()); // Return the DTO list
     }
 
-    String deleteUser(int userId){
-        return null;
+    public void deleteUser(int userId){
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+        userRepo.delete(user);
     }
 
     public UserDTO userToDto(User user) {
@@ -50,6 +55,7 @@ public class UserService {
         userDTO.setName(user.getName());
         userDTO.setPassword(user.getPassword());
         userDTO.setEmail(user.getEmail());
+        userDTO.setAbout(user.getAbout());
         return userDTO; // Return the mapped object instead of null
     }
 
@@ -59,6 +65,7 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
+        user.setAbout(userDTO.getAbout());
         return user;
     }
 }
