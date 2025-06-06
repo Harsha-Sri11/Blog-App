@@ -5,6 +5,8 @@ import com.blog.app.Blog_app.Exceptions.ResourceNotFoundException;
 import com.blog.app.Blog_app.Repository.UserRepo;
 import com.blog.app.Blog_app.payloads.UserDTO;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepo userRepo;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public UserDTO createUser(UserDTO userDTO) {
         User user = dtoToUser(userDTO); //converting UserDTO to User
@@ -50,22 +54,23 @@ public class UserService {
     }
 
     public UserDTO userToDto(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId()); // Correctly setting the ID
-        userDTO.setName(user.getName());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setAbout(user.getAbout());
+        UserDTO userDTO = this.modelMapper.map(user,UserDTO.class);
+//        userDTO.setId(user.getId()); // Correctly setting the ID
+//        userDTO.setName(user.getName());
+//        userDTO.setPassword(user.getPassword());
+//        userDTO.setEmail(user.getEmail());
+//        userDTO.setAbout(user.getAbout());
         return userDTO; // Return the mapped object instead of null
     }
 
     public User dtoToUser(UserDTO userDTO){
-       User user = new User();
-        user.setId(userDTO.getId()); // Correctly setting the ID
-        user.setName(userDTO.getName());
-        user.setPassword(userDTO.getPassword());
-        user.setEmail(userDTO.getEmail());
-        user.setAbout(userDTO.getAbout());
+        User user = this.modelMapper.map(userDTO,User.class);
+//       User user = new User();
+//        user.setId(userDTO.getId()); // Correctly setting the ID
+//        user.setName(userDTO.getName());
+//        user.setPassword(userDTO.getPassword());
+//        user.setEmail(userDTO.getEmail());
+//        user.setAbout(userDTO.getAbout());
         return user;
     }
 }
