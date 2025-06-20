@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name="users")
 @NoArgsConstructor
@@ -14,7 +17,7 @@ import lombok.Setter;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int userId;
 
     @Column(name="user_name",nullable = false)
     private String name;
@@ -24,4 +27,7 @@ public class User {
     private String email;
 
     private String about;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    List<Post> posts = new ArrayList<>();  // User can have many posts
 }

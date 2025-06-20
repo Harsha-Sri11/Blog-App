@@ -24,22 +24,23 @@ public class UserService {
     public UserDTO createUser(UserDTO userDTO) {
         User user = dtoToUser(userDTO); //converting UserDTO to User
         User savedUser = userRepo.save(user);
-        userToDto(savedUser); //converting user back to UserDTO
-        return userDTO;
+        UserDTO savedUserDTO= userToDto(savedUser); //converting user back to UserDTO
+        return savedUserDTO;
     }
 
     public UserDTO updateUser(UserDTO userDTO,int userId){
-        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setAbout(userDTO.getAbout());
+        user.setPassword(userDTO.getPassword());
         User updatedUser = userRepo.save(user);
-        userToDto(updatedUser);
-        return userDTO;
+        UserDTO updateuserDTO= userToDto(updatedUser);
+        return updateuserDTO;
     }
 
     public UserDTO getUser(int userId){
-        User getUser = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+        User getUser = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
         return userToDto(getUser);
     }
 
@@ -49,7 +50,7 @@ public class UserService {
     }
 
     public void deleteUser(int userId){
-        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
         userRepo.delete(user);
     }
 

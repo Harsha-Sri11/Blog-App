@@ -13,7 +13,7 @@ public class CategoryDTO {
     private int categoryId;
 
     @NotBlank
-    @Size(message = "Must atleast be a word")
+    @Size(message = "Must be a sentence")
     private String categoryTitle;
 
     @NotBlank
