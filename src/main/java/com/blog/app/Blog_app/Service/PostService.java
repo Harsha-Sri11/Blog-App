@@ -8,9 +8,14 @@ import com.blog.app.Blog_app.Repository.CategoryRepo;
 import com.blog.app.Blog_app.Repository.PostRepo;
 import com.blog.app.Blog_app.Repository.UserRepo;
 import com.blog.app.Blog_app.payloads.PostDTO;
+import com.blog.app.Blog_app.payloads.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -61,10 +66,22 @@ public class PostService {
 
     }
 
-    public List<PostDTO> getAllPosts(){
-        List<Post> getPosts = postRepo.findAll();
+    public PostResponse getAllPosts(int pageNumber, int pageSize, String sortBy, String sortOrder){
+        Sort sort = (sortOrder.equalsIgnoreCase("asc"))? Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNumber,pageSize,sort);
+        Page<Post> postInPage = postRepo.findAll(pageable);
+        List<Post> getPosts = postInPage.getContent();
+
         List<PostDTO> getPostDtos = getPosts.stream().map(post -> modelMapper.map(post, PostDTO.class)).collect(Collectors.toList());
-        return getPostDtos;
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(getPostDtos);
+        postResponse.setPageNumber(postInPage.getNumber());
+        postResponse.setPageSize(postInPage.getSize());
+        postResponse.setTotalElements(postInPage.getTotalElements());
+        postResponse.setTotalPages(postInPage.getTotalPages());
+        postResponse.setLastPage(postInPage.isLast());
+        return postResponse;
     }
 
 
