@@ -75,7 +75,7 @@ public class PostService {
 
         List<PostDTO> getPostDtos = getPosts.stream().map(post -> modelMapper.map(post, PostDTO.class)).collect(Collectors.toList());
         PostResponse postResponse = new PostResponse();
-        postResponse.setContent(getPostDtos);
+        postResponse.setPostDTO(getPostDtos);
         postResponse.setPageNumber(postInPage.getNumber());
         postResponse.setPageSize(postInPage.getSize());
         postResponse.setTotalElements(postInPage.getTotalElements());
@@ -93,8 +93,8 @@ public class PostService {
     }
 
 
-    public PostDTO updatePost(PostDTO postDTO,int postId){
-        Post updatePost = postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post","postId",postId));
+    public PostDTO updatePost(PostDTO postDTO, int postId) {
+        Post updatePost = postRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "postId", postId));
         updatePost.setPostTitle(postDTO.getPostTitle());
         updatePost.setContent(postDTO.getContent());
         updatePost.setPostedDate(new Date());
@@ -108,8 +108,10 @@ public class PostService {
             postRepo.delete(post);
     }
 
-//
-//    List<Post> searchPosts(String keyword){
-//
-//    }
+
+   public List<PostDTO> searchPost(String keyword){
+    List<Post> searchPost = postRepo.findBypostTitleContaining(keyword);
+    List<PostDTO> postDTO= searchPost.stream().map(post-> modelMapper.map(post,PostDTO.class)).collect(Collectors.toList());
+    return postDTO;
+  }
 }
