@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -27,5 +29,6 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;          //Many posts can be made a by a single user
-
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    private Set<Comment> comments = new HashSet<>();
 }
