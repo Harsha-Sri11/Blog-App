@@ -1,12 +1,11 @@
 package com.blog.app.Blog_app.Entity;
 
+import com.blog.app.Blog_app.payloads.CommentDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
@@ -30,5 +29,5 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;          //Many posts can be made a by a single user
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
-    private Set<Comment> comments = new HashSet<>();
+    private List<Comment> comments = new ArrayList<>();
 }

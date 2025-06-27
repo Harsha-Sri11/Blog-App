@@ -2,9 +2,6 @@ package com.blog.app.Blog_app.Exceptions;
 
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 @Data
 public class ResourceNotFoundException extends RuntimeException{
     String resourceName;

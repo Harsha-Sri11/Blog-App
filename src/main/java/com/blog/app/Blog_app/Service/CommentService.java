@@ -32,7 +32,7 @@ public class CommentService {
     }
 
     public CommentDTO getCommentbyId(int commentId){
-        Comment comment = commentRepo.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment","commentId",+commentId));
+        Comment comment = commentRepo.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "commentId", +commentId));
         return modelMapper.map(comment, CommentDTO.class);
     }
 

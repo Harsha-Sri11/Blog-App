@@ -8,9 +8,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -22,5 +20,4 @@ public class PostDTO {
     private String imageName;
     private CategoryDTO category;  // Many posts can be under a single category
     private UserDTO user;
-    private Set<Comment> comments = new HashSet<>();
-}
+    private List<CommentDTO> comments = new ArrayList<>();}
